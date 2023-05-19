@@ -30,15 +30,19 @@ async function run() {
             const result = await my_db.insertOne(toy)
             res.send(result)
         })
-
         app.get('/all-toys', async (req, res) => {
-            const result = await my_db.find().toArray()
+            const result = await my_db.find().limit(5).toArray()
             res.send(result)
         })
+        app.get('/all-toys/:text', async (req, res) => {
+            const text = req.params.text;
+            const regex = new RegExp(text, 'i');
+            const result = await my_db.find({ name: { $regex: regex } }).toArray();
+            res.send(result);
+        });
         app.get('/:text', async (req, res) => {
             const text = req.params.text;
             const result = await my_db.find({ subCategory: text }).toArray()
-            console.log(text, result);
             res.send(result)
         })
         app.get('/toy/:id', async (req, res) => {
