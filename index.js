@@ -65,7 +65,13 @@ async function run() {
                 },
             };
             const result = await my_db.updateOne(filter, updateDoc)
-            console.log(id, '60');
+            // console.log(id, '60');
+            res.send(result)
+        })
+        app.delete('/delete-toy/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id, '73');
+            const result = await my_db.deleteOne({ _id: new ObjectId(id) })
             res.send(result)
         })
         // Send a ping to confirm a successful connection
