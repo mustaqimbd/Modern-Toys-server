@@ -30,6 +30,11 @@ async function run() {
             const result = await my_db.insertOne(toy)
             res.send(result)
         })
+        app.get('/my-toys/:user', async (req, res) => {
+            const query = req.params.user;
+            const result = await my_db.find({ sellerEmail: query }).toArray();
+            res.send(result)
+        })
         app.get('/all-toys', async (req, res) => {
             const result = await my_db.find().limit(5).toArray()
             res.send(result)
