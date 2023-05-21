@@ -30,13 +30,8 @@ async function run() {
             const result = await my_db.insertOne(toy)
             res.send(result)
         })
-        app.get('/my-toys/:user', async (req, res) => {
-            const query = req.params.user;
-            const result = await my_db.find({ sellerEmail: query }).toArray();
-            res.send(result)
-        })
         app.get('/all-toys', async (req, res) => {
-            const result = await my_db.find().limit(5).toArray()
+            const result = await my_db.find().limit(20).toArray()
             res.send(result)
         })
         app.get('/all-toys/:text', async (req, res) => {
@@ -50,6 +45,25 @@ async function run() {
             const result = await my_db.find({ subCategory: text }).toArray()
             res.send(result)
         })
+        app.get('/my-toys/:user', async (req, res) => {
+            const query = req.params.user;
+            console.log(req.body, '35544444');
+            const result = await my_db.find({ sellerEmail: query }).toArray();
+            res.send(result)
+        })
+        app.get('/my-toys/ascending/:user', async (req, res) => {
+            const query = req.params.user;
+            console.log(query, '564');
+            const result = await my_db.find({ sellerEmail: query }).sort({ price: 1 }).toArray();
+            res.send(result)
+        })
+        app.get('/my-toys/descending/:user', async (req, res) => {
+            const query = req.params.user;
+            console.log(query, '62');
+            const result = await my_db.find({ sellerEmail: query }).sort({ price: -1 }).toArray();
+            res.send(result)
+        })
+
         app.get('/toy/:id', async (req, res) => {
             const id = req.params.id;
             const result = await my_db.findOne({ _id: new ObjectId(id) })
