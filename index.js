@@ -22,9 +22,18 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        await client.connect();
+        client.connect();
         const my_db = client.db('modern_toys').collection('toys')
-
+        const carouselInfo = client.db('modern_toys').collection('carousel_images');
+        
+        app.get('/carousel-info', async (req, res) => {
+            const result = await carouselInfo.find().toArray();
+            res.send(result)
+        })
+        app.get('/', async (req, res) => {
+            const result = await my_db.find().toArray()
+            res.send(result)
+        })
         app.post('/add-toy', async (req, res) => {
             const toy = req.body;
             const result = await my_db.insertOne(toy)
@@ -47,19 +56,19 @@ async function run() {
         })
         app.get('/my-toys/:user', async (req, res) => {
             const query = req.params.user;
-            console.log(req.body, '35544444');
+
             const result = await my_db.find({ sellerEmail: query }).toArray();
             res.send(result)
         })
         app.get('/my-toys/ascending/:user', async (req, res) => {
             const query = req.params.user;
-            console.log(query, '564');
+
             const result = await my_db.find({ sellerEmail: query }).sort({ price: 1 }).toArray();
             res.send(result)
         })
         app.get('/my-toys/descending/:user', async (req, res) => {
             const query = req.params.user;
-            console.log(query, '62');
+
             const result = await my_db.find({ sellerEmail: query }).sort({ price: -1 }).toArray();
             res.send(result)
         })
@@ -79,12 +88,11 @@ async function run() {
                 },
             };
             const result = await my_db.updateOne(filter, updateDoc)
-            // console.log(id, '60');
+
             res.send(result)
         })
         app.delete('/delete-toy/:id', async (req, res) => {
             const id = req.params.id;
-            console.log(id, '73');
             const result = await my_db.deleteOne({ _id: new ObjectId(id) })
             res.send(result)
         })
